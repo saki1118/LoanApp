@@ -14,6 +14,7 @@ const Register = () => {
 
   const [otpGenerated, setOtpGenerated] = useState(false);
   const [generatedOtp, setGeneratedOtp] = useState('');
+  const [otpVerified, setOtpVerified] = useState(false);
 
   const navigate = useNavigate();
 
@@ -37,6 +38,7 @@ const Register = () => {
     // Verify OTP
     if (form.otp === generatedOtp) {
       alert('OTP Verified. Proceed with Registration.');
+      setOtpVerified(true);
     } else {
       alert('Invalid OTP. Please try again.');
     }
@@ -105,12 +107,16 @@ const Register = () => {
         </FormField>
         {!otpGenerated && (
           <ButtonContainer>
-            <VerifyButton type="button" onClick={handleGenerateOTP}>
+            <VerifyButton
+              type="button"
+              onClick={handleGenerateOTP}
+              disabled={!form.phoneNumber}
+            >
               Generate OTP
             </VerifyButton>
           </ButtonContainer>
         )}
-        {otpGenerated && (
+        {otpGenerated && !otpVerified && (
           <>
             <FormField>
               <label>Enter OTP</label>
@@ -129,9 +135,9 @@ const Register = () => {
             </ButtonContainer>
           </>
         )}
-        {form.otp && (
+        {otpVerified && (
           <ButtonContainer>
-            <RegisterButton type="submit" onClick={handleSubmit}>
+            <RegisterButton type="submit">
               Register
             </RegisterButton>
           </ButtonContainer>
@@ -146,7 +152,7 @@ const PageContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #ddead1; /* Same background color as Login component */
+  background: #ddead1;
   margin: 0;
   padding: 0;
 `;
@@ -205,6 +211,11 @@ const VerifyButton = styled.button`
 
   &:hover {
     background-color: #ddead1;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
   }
 `;
 
